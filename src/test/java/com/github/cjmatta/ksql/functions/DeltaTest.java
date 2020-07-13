@@ -1,6 +1,7 @@
 package com.github.cjmatta.ksql.functions;
 
 import io.confluent.ksql.function.udaf.Udaf;
+import org.apache.kafka.connect.data.Struct;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -8,26 +9,47 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DeltaTest {
     @Test
     public void deltaIntegers() {
-        Udaf<Integer, Integer, Integer> udaf = Delta.deltaInt();
+        Udaf<Integer, Struct, Integer> udaf = Delta.deltaInt();
+        Struct aggregate = udaf.initialize();
 
-        Integer aggregate = udaf.aggregate(4, 5);
-        assertEquals(-1, aggregate);
+        Integer[] values = new Integer[] {5, 6, 4};
+        for (Integer value: values) {
+            aggregate = udaf.aggregate(value, aggregate);
+        }
+        Integer result = udaf.map(aggregate);
+
+        assertEquals(-2, result);
     }
 
     @Test
     public void deltaLong() {
-        Udaf<Long, Long, Long> udaf = Delta.deltaLong();
+        Udaf<Long, Struct, Long> udaf = Delta.deltaLong();
+        Struct aggregate = udaf.initialize();
 
-        Long aggregate = udaf.aggregate(44L, 5L);
-        assertEquals(39L, aggregate);
+        Long[] values = new Long[] {55L, 5L, 78L};
+        for (Long value: values) {
+            aggregate = udaf.aggregate(value, aggregate);
+        }
+
+        Long result = udaf.map(aggregate);
+
+        assertEquals(73L, result);
     }
 
     @Test
     public void deltaDouble() {
-        Udaf<Double, Double, Double> udaf = Delta.deltaDouble();
+        Udaf<Double, Struct, Double> udaf = Delta.deltaDouble();
 
-        Double aggregate = udaf.aggregate(44.005, 5.0);
-        assertEquals(39.005, aggregate);
+        Struct aggregate = udaf.initialize();
+
+        Double[] values = new Double[] {55.550, 5.323422, 78.644922};
+        for (Double value: values) {
+            aggregate = udaf.aggregate(value, aggregate);
+        }
+
+        Double result = udaf.map(aggregate);
+
+        assertEquals(73.3215, result);
     }
 
 
