@@ -7,8 +7,6 @@ import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaBuilder;
 import org.apache.kafka.connect.data.Struct;
 
-import java.awt.dnd.DragGestureEvent;
-
 @UdafDescription(name="delta", description = "Function that returns the delta between consecutive events with the same key")
 public class Delta {
     public static final String PREVIOUS = "PREVIOUS";
