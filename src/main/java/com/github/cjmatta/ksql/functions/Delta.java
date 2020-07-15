@@ -12,29 +12,29 @@ public class Delta {
     public static final String PREVIOUS = "PREVIOUS";
     public static final String CURRENT = "CURRENT";
 
-    @UdafFactory(description = "Compute the delta between two consecutive Integers")
+    @UdafFactory(description = "Compute the delta between two consecutive Integers",
+            aggregateSchema = "STRUCT<PREVIOUS integer, CURRENT integer>")
     public static Udaf<Integer, Struct, Integer> deltaInt() {
 
         final Schema AGGREGATE_STRUCT_SCHEMA = SchemaBuilder.struct().optional()
                 .field(PREVIOUS, Schema.INT32_SCHEMA)
                 .field(CURRENT, Schema.INT32_SCHEMA)
                 .build();
-        final Struct AGGREGATE_STRUCT = new Struct(AGGREGATE_STRUCT_SCHEMA);
 
         return new Udaf<Integer, Struct, Integer>() {
 
             @Override
             public Struct initialize() {
-                AGGREGATE_STRUCT.put(PREVIOUS, 0);
-                AGGREGATE_STRUCT.put(CURRENT, 0);
-                return AGGREGATE_STRUCT;
+                return new Struct(AGGREGATE_STRUCT_SCHEMA)
+                        .put(PREVIOUS, 0)
+                        .put(CURRENT, 0);
             }
 
             @Override
             public Struct aggregate(Integer current, Struct aggregate) {
-                AGGREGATE_STRUCT.put(PREVIOUS, aggregate.get(CURRENT));
-                AGGREGATE_STRUCT.put(CURRENT, current);
-                return AGGREGATE_STRUCT;
+                return new Struct(AGGREGATE_STRUCT_SCHEMA)
+                        .put(PREVIOUS, aggregate.get(CURRENT))
+                        .put(CURRENT, current);
             }
 
             @Override
@@ -49,27 +49,27 @@ public class Delta {
         };
     }
 
-    @UdafFactory(description = "Compute the delta between two consecutive Longs")
+    @UdafFactory(description = "Compute the delta between two consecutive Longs",
+            aggregateSchema = "STRUCT<PREVIOUS bigint, CURRENT bigint>")
     public static Udaf<Long, Struct, Long> deltaLong() {
         return new Udaf<Long, Struct, Long>() {
             final Schema AGGREGATE_STRUCT_SCHEMA = SchemaBuilder.struct().optional()
                     .field(PREVIOUS, Schema.INT64_SCHEMA)
                     .field(CURRENT, Schema.INT64_SCHEMA)
                     .build();
-            final Struct AGGREGATE_STRUCT = new Struct(AGGREGATE_STRUCT_SCHEMA);
 
             @Override
             public Struct initialize() {
-                AGGREGATE_STRUCT.put(CURRENT, 0L);
-                AGGREGATE_STRUCT.put(PREVIOUS, 0L);
-                return AGGREGATE_STRUCT;
+                return new Struct(AGGREGATE_STRUCT_SCHEMA)
+                        .put(PREVIOUS, 0L)
+                        .put(CURRENT, 0L);
             }
 
             @Override
             public Struct aggregate(Long current, Struct aggregate) {
-                AGGREGATE_STRUCT.put(PREVIOUS, aggregate.getInt64(CURRENT));
-                AGGREGATE_STRUCT.put(CURRENT, current);
-                return AGGREGATE_STRUCT;
+                return new Struct(AGGREGATE_STRUCT_SCHEMA)
+                        .put(PREVIOUS, aggregate.get(CURRENT))
+                        .put(CURRENT, current);
             }
 
             @Override
@@ -85,27 +85,27 @@ public class Delta {
         };
     }
     
-    @UdafFactory(description = "Compute the delta between two consecutive Doubles")
+    @UdafFactory(description = "Compute the delta between two consecutive Doubles",
+            aggregateSchema = "STRUCT<PREVIOUS double, CURRENT double>")
     public static Udaf<Double, Struct, Double> deltaDouble() {
         return new Udaf<Double, Struct, Double>() {
             final Schema AGGREGATE_STRUCT_SCHEMA = SchemaBuilder.struct().optional()
                     .field(PREVIOUS, Schema.FLOAT64_SCHEMA)
                     .field(CURRENT, Schema.FLOAT64_SCHEMA)
                     .build();
-            final Struct AGGREGATE_STRUCT = new Struct(AGGREGATE_STRUCT_SCHEMA);
-
+            
             @Override
             public Struct initialize() {
-                AGGREGATE_STRUCT.put(CURRENT, 0.0);
-                AGGREGATE_STRUCT.put(PREVIOUS, 0.0);
-                return AGGREGATE_STRUCT;
+                return new Struct(AGGREGATE_STRUCT_SCHEMA)
+                        .put(PREVIOUS, 0.0)
+                        .put(CURRENT, 0.0);
             }
 
             @Override
             public Struct aggregate(Double current, Struct aggregate) {
-                AGGREGATE_STRUCT.put(PREVIOUS, aggregate.getFloat64(CURRENT));
-                AGGREGATE_STRUCT.put(CURRENT, current);
-                return AGGREGATE_STRUCT;
+                return new Struct(AGGREGATE_STRUCT_SCHEMA)
+                        .put(PREVIOUS, aggregate.get(CURRENT))
+                        .put(CURRENT, current);
             }
 
             @Override
