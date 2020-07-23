@@ -17,8 +17,8 @@ public class Delta {
     public static Udaf<Integer, Struct, Integer> deltaInt() {
 
         final Schema AGGREGATE_STRUCT_SCHEMA = SchemaBuilder.struct().optional()
-                .field(PREVIOUS, Schema.INT32_SCHEMA)
-                .field(CURRENT, Schema.INT32_SCHEMA)
+                .field(PREVIOUS, Schema.OPTIONAL_INT32_SCHEMA)
+                .field(CURRENT, Schema.OPTIONAL_INT32_SCHEMA)
                 .build();
 
         return new Udaf<Integer, Struct, Integer>() {
@@ -54,8 +54,8 @@ public class Delta {
     public static Udaf<Long, Struct, Long> deltaLong() {
         return new Udaf<Long, Struct, Long>() {
             final Schema AGGREGATE_STRUCT_SCHEMA = SchemaBuilder.struct().optional()
-                    .field(PREVIOUS, Schema.INT64_SCHEMA)
-                    .field(CURRENT, Schema.INT64_SCHEMA)
+                    .field(PREVIOUS, Schema.OPTIONAL_INT64_SCHEMA)
+                    .field(CURRENT, Schema.OPTIONAL_INT64_SCHEMA)
                     .build();
 
             @Override
@@ -90,10 +90,10 @@ public class Delta {
     public static Udaf<Double, Struct, Double> deltaDouble() {
         return new Udaf<Double, Struct, Double>() {
             final Schema AGGREGATE_STRUCT_SCHEMA = SchemaBuilder.struct().optional()
-                    .field(PREVIOUS, Schema.FLOAT64_SCHEMA)
-                    .field(CURRENT, Schema.FLOAT64_SCHEMA)
+                    .field(PREVIOUS, Schema.OPTIONAL_FLOAT64_SCHEMA)
+                    .field(CURRENT, Schema.OPTIONAL_FLOAT64_SCHEMA)
                     .build();
-            
+
             @Override
             public Struct initialize() {
                 return new Struct(AGGREGATE_STRUCT_SCHEMA)
